@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Controller</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        /* Base Styles */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        .controller-container {
+            width: 100%;
+            min-width: 1400px;
+            max-width: 2000px;
+            padding: 25px;
+            background: #15171B;
+            color: #ffffff;
+            border-radius: 15px;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 0 15px rgba(0, 0, 0, 0.6),
+                0 0 0 3px rgba(180, 180, 180, 0.5),
+                inset 0 4px 6px rgba(255, 255, 255, 0.3),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.4),
+                0 0 3px rgba(200, 200, 200, 0.2),
+                0 0 20px rgba(0, 0, 0, 0.4);
+            background-image:
+                repeating-linear-gradient(90deg,
+                    rgba(180, 180, 180, 0.05) 0px,
+                    rgba(180, 180, 180, 0.05) 1px,
+                    rgba(120, 120, 120, 0.05) 1px,
+                    rgba(120, 120, 120, 0.05) 2px),
+                linear-gradient(145deg,
+                    rgba(160, 160, 160, 0.15) 0%,
+                    rgba(80, 80, 80, 0.15) 50%,
+                    rgba(40, 40, 40, 0.15) 100%);
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: rgb(0, 168, 168);
+        }
+
+        .led-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #00ff00;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+
+
+        /* DateTime and Weather Section */
+        .time {
+            font-size: 0.9em;
+            color: #ffffff;
+            margin-top: 4px;
+        }
+
+        .weather {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+
+        .weather .material-symbols-outlined {
+            font-size: 24px;
+            color: #ffa726;
+        }
+
+        .weather-text {
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
+                box-shadow: 0 0 2px #00ff00;
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 10px #00ff00;
+            }
+
+            100% {
+                opacity: 0.3;
+                box-shadow: 0 0 2px #00ff00;
+            }
+        }
+
+        .footer {
+            background: var(--card);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+            color: #ffa726;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="controller-container">
+        <div class="header-section">
+            <div class="brand-container">
+                <div class="brand">Automata</div>
+                <div class="led-indicator"></div>
+            </div>
+            <div class="datetime-weather">
+                <div class="datetime">
+                    <span id="date">Monday, Dec 27</span>
+                    <span style="margin: 0 5px;">|</span>
+                    <span id="time">8:30 AM</span>
+                </div>
+                <div class="weather">
+                    <span class="material-symbols-outlined" id="weatherIcon">sunny</span>
+                    <span class="weather-text" id="weatherText">Sunny 72°F</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paste Part 2 Here -->
+        <!-- Part 2: Temperature Display Section -->
+        <style>
+            /* Temperature Display Section */
+            .temp-display-section {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 2rem;
+                padding: 20px;
+                margin: 0 15px 20px;
+                background: rgba(42, 47, 54, 0.5);
+                border-radius: 12px;
+            }
+
+            .temp-ring {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.8em;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            .temp-ring.cw {
+                border: 2px solid #00a8a8;
+                background: rgba(0, 168, 168, 0.1);
+                box-shadow: 0 0 15px rgba(0, 168, 168, 0.2);
+            }
+
+            .temp-ring.hw {
+                border: 2px solid #ff5733;
+                background: rgba(255, 87, 51, 0.1);
+                box-shadow: 0 0 15px rgba(255, 87, 51, 0.2);
+            }
+
+            .temp-ring.showing-setpoint {
+                transform: scale(1.05);
+            }
+
+            .temp-ring.cw.showing-setpoint {
+                box-shadow: 0 0 25px rgba(0, 168, 168, 0.4);
+            }
+
+            .temp-ring.hw.showing-setpoint {
+                box-shadow: 0 0 25px rgba(255, 87, 51, 0.4);
+            }
+
+            .setpoint-label {
+                position: absolute;
+                top: -25px;
+                font-size: 0.9em;
+                color: #ffa726;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .showing-setpoint .setpoint-label {
+                opacity: 1;
+            }
+
+            /* Alarm Status Section */
+            .alarm-status-section {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                background: rgba(0, 0, 0, 0.2);
+                padding: 15px 25px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .alarm-indicator {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 15px;
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .alarm-indicator[data-status="true"] {
+                background: rgba(46, 204, 113, 0.2);
+                border: 1px solid rgba(46, 204, 113, 0.3);
+            }
+
+            .alarm-indicator[data-status="false"] {
+                background: rgba(231, 76, 60, 0.2);
+                border: 1px solid rgba(231, 76, 60, 0.3);
+                animation: slow-heartbeat 2s infinite;
+                /* Slow heartbeat animation */
+            }
+
+            .alarm-indicator[data-status="true"] .material-symbols-outlined {
+                color: #2ecc71;
+            }
+
+            .alarm-indicator[data-status="false"] .material-symbols-outlined {
+                color: #e74c3c;
+            }
+
+            @keyframes slow-heartbeat {
+                0% {
+                    transform: scale(1);
+                    opacity: 0.8;
+                }
+
+                50% {
+                    transform: scale(1.1);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: scale(1);
+                    opacity: 0.8;
+                }
+            }
+        </style>
+
+        <div class="temp-display-section">
+            <div class="temp-ring cw" id="cwRing">
+                <div class="setpoint-label">Setpoint: <span id="cwSetpoint">45.00</span>°</div>
+                <div class="temp-value"><span id="cwSupply">45.00</span>°</div>
+            </div>
+
+            <div class="alarm-status-section">
+                <div class="alarm-indicator" id="cwAlarm" data-status="true">
+                    <span class="material-symbols-outlined">severe_cold</span>
+                    <span>CW System Nomal</span>
+                </div>
+                <div class="alarm-indicator" id="hwAlarm" data-status="true">
+                    <span class="material-symbols-outlined">emergency_heat_2</span>
+                    <span>HW System Normal</span>
+                </div>
+            </div>
+
+            <div class="temp-ring hw" id="hwRing">
+                <div class="setpoint-label">Setpoint: <span id="hwSetpoint">180.00</span>°</div>
+                <div class="temp-value"><span id="hwSupply">180.00</span>°</div>
+            </div>
+        </div>
+
+        <!-- Paste Part 3 Here -->
+        <!-- Part 3: Status Grid Section -->
+        <style>
+            /* Status Grid Styling */
+            .status-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 15px;
+                margin: 20px;
+                padding: 20px;
+                background: rgba(42, 47, 54, 0.5);
+                border-radius: 12px;
+            }
+
+            .status-indicator {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 12px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .status-label {
+                background: #2a2f36;
+                padding: 5px 10px;
+                border-radius: 6px;
+                font-size: 0.9em;
+                font-weight: 500;
+                white-space: nowrap;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Default icon styling */
+            .material-symbols-outlined {
+                transition: all 0.3s ease;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+            }
+
+            /* Set MQTT, Pump icons to teal gradient */
+            #mqttStatus~.material-symbols-outlined,
+            [id^="cwPump"]~.material-symbols-outlined,
+            [id^="hwPump"]~.material-symbols-outlined {
+                background: linear-gradient(45deg, #00a8a8, #004444);
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+
+            /* Set Chiller icons to teal gradient */
+            [id^="chiller"]~.material-symbols-outlined {
+                background: linear-gradient(45deg, #00a8a8, #004444);
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+
+            /* Set boiler icons to orange gradient */
+            [id^="boiler"]~.material-symbols-outlined {
+                background: linear-gradient(45deg, #ff5733, #992000);
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+
+            /* Active state label */
+            .status-label[data-active="true"] {
+                background: #2ecc71;
+                color: #000;
+                font-weight: 600;
+                box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+            }
+
+            /* Active state animations for teal icons */
+            #mqttStatus[data-active="true"]~.material-symbols-outlined,
+            [id^="cwPump"][data-active="true"]~.material-symbols-outlined,
+            [id^="hwPump"][data-active="true"]~.material-symbols-outlined,
+            [id^="chiller"][data-active="true"]~.material-symbols-outlined {
+                animation: gradient-flow-teal 3s infinite;
+            }
+
+            /* Active state animations for orange icons */
+            [id^="boiler"][data-active="true"]~.material-symbols-outlined {
+                animation: gradient-flow-orange 3s infinite;
+            }
+
+            @keyframes gradient-flow-teal {
+                0% {
+                    background: linear-gradient(45deg, #00a8a8, #004444);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+
+                50% {
+                    background: linear-gradient(45deg, #00ffff, #00a8a8);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+
+                100% {
+                    background: linear-gradient(45deg, #00a8a8, #004444);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+            }
+
+            @keyframes gradient-flow-orange {
+                0% {
+                    background: linear-gradient(45deg, #ff5733, #992000);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+
+                50% {
+                    background: linear-gradient(45deg, #ff8c66, #ff5733);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+
+                100% {
+                    background: linear-gradient(45deg, #ff5733, #992000);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+            }
+        </style>
+
+        <!-- Status Grid -->
+        <div class="status-grid">
+            <div class="status-indicator">
+                <span class="status-label" id="mqttStatus" data-active="false">MQTT</span>
+                <span class="material-symbols-outlined">wifi</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="hwPump1Status" data-active="false">HwPump1</span>
+                <span class="material-symbols-outlined">cyclone</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="hwPump2Status" data-active="false">HwPump2</span>
+                <span class="material-symbols-outlined">cyclone</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="cwPump1Status" data-active="false">CwPump1</span>
+                <span class="material-symbols-outlined">cyclone</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="cwPump2Status" data-active="false">CwPump2</span>
+                <span class="material-symbols-outlined">cyclone</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="chiller1Status" data-active="false">Chiller1</span>
+                <span class="material-symbols-outlined">ac_unit</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="chiller2Status" data-active="false">Chiller2</span>
+                <span class="material-symbols-outlined">ac_unit</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="boiler1Status" data-active="false">Boiler1</span>
+                <span class="material-symbols-outlined">heat_pump</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="boiler2Status" data-active="false">Boiler2</span>
+                <span class="material-symbols-outlined">heat_pump</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="boiler3Status" data-active="false">Boiler3</span>
+                <span class="material-symbols-outlined">heat_pump</span>
+            </div>
+
+            <div class="status-indicator">
+                <span class="status-label" id="boiler4Status" data-active="false">Boiler4</span>
+                <span class="material-symbols-outlined">heat_pump</span>
+            </div>
+        </div>
+
+        <!-- Paste Part 4 Here -->
+        <!-- Part 4: Equipment Control Buttons -->
+        <style>
+            /* Equipment Control Buttons */
+            .equipment-controls {
+                display: grid;
+                grid-template-rows: auto auto;
+                gap: 25px;
+                margin: 30px 20px;
+                padding: 20px;
+                background: rgba(42, 47, 54, 0.5);
+                border-radius: 12px;
+            }
+
+            .control-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                padding: 15px;
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 10px;
+            }
+
+            .equipment-button {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 15px;
+                background: #2a2f36;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Equipment Type Variations */
+            .equipment-button.chiller {
+                --glow-color: #00a8a8;
+                color: #00a8a8;
+            }
+
+            .equipment-button.boiler {
+                --glow-color: #ff5733;
+                color: #ff5733;
+            }
+
+            .equipment-button.pump {
+                --glow-color: #4fc3f7;
+                color: #4fc3f7;
+            }
+
+            /* Active State Animations */
+            .equipment-button[data-active="true"] {
+                border-color: var(--glow-color);
+                background: rgba(0, 0, 0, 0.4);
+                animation: equipment-pulse 2s infinite ease-in-out;
+            }
+
+            .equipment-button .material-symbols-outlined {
+                font-size: 24px;
+                transition: transform 0.3s ease;
+            }
+
+            /* Icon Animations Based on Equipment Type */
+            .equipment-button.chiller[data-active="true"] .material-symbols-outlined,
+            .equipment-button.pump[data-active="true"] .material-symbols-outlined {
+                animation: icon-spin 3s infinite linear;
+            }
+
+            .equipment-button.boiler[data-active="true"] .material-symbols-outlined {
+                animation: wave-motion 2s ease-in-out infinite;
+            }
+
+            /* Animation Keyframes */
+            @keyframes equipment-pulse {
+                0% {
+                    box-shadow: 0 0 5px var(--glow-color);
+                }
+
+                50% {
+                    box-shadow: 0 0 20px var(--glow-color),
+                        inset 0 0 10px var(--glow-color);
+                }
+
+                100% {
+                    box-shadow: 0 0 5px var(--glow-color);
+                }
+            }
+
+            @keyframes icon-spin {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes wave-motion {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                25% {
+                    transform: rotate(-15deg);
+                }
+
+                50% {
+                    transform: rotate(0deg);
+                }
+
+                75% {
+                    transform: rotate(15deg);
+                }
+
+                100% {
+                    transform: rotate(0deg);
+                }
+            }
+
+            .equipment-button:hover {
+                transform: translateY(-2px);
+                border-color: var(--glow-color);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+
+            .equipment-button:active {
+                transform: translateY(0);
+            }
+        </style>
+
+        <div class="equipment-controls">
+            <!-- Chillers and Boilers Row -->
+            <div class="control-row">
+                <div class="equipment-button chiller" id="chiller1Enable" data-active="false">
+                    <span class="material-symbols-outlined">ac_unit</span>
+                    <span>Chiller 1</span>
+                </div>
+                <div class="equipment-button chiller" id="chiller2Enable" data-active="false">
+                    <span class="material-symbols-outlined">ac_unit</span>
+                    <span>Chiller 2</span>
+                </div>
+                <div class="equipment-button boiler" id="boiler1Enable" data-active="false">
+                    <span class="material-symbols-outlined">heat</span>
+                    <span>Boiler 1</span>
+                </div>
+                <div class="equipment-button boiler" id="boiler2Enable" data-active="false">
+                    <span class="material-symbols-outlined">heat</span>
+                    <span>Boiler 2</span>
+                </div>
+                <div class="equipment-button boiler" id="boiler3Enable" data-active="false">
+                    <span class="material-symbols-outlined">heat</span>
+                    <span>Boiler 3</span>
+                </div>
+                <div class="equipment-button boiler" id="boiler4Enable" data-active="false">
+                    <span class="material-symbols-outlined">heat</span>
+                    <span>Boiler 4</span>
+                </div>
+            </div>
+
+            <!-- Pumps Row -->
+            <div class="control-row">
+                <div class="equipment-button pump" id="cwPump1Enable" data-active="false">
+                    <span class="material-symbols-outlined">water_pump</span>
+                    <span>CW Pump 1</span>
+                </div>
+                <div class="equipment-button pump" id="cwPump2Enable" data-active="false">
+                    <span class="material-symbols-outlined">water_pump</span>
+                    <span>CW Pump 2</span>
+                </div>
+                <div class="equipment-button pump" id="hwPump1Enable" data-active="false">
+                    <span class="material-symbols-outlined">water_pump</span>
+                    <span>HW Pump 1</span>
+                </div>
+                <div class="equipment-button pump" id="hwPump2Enable" data-active="false">
+                    <span class="material-symbols-outlined">water_pump</span>
+                    <span>HW Pump 2</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paste Part 5 Here -->
+        <!-- Part 5: Information Display Section -->
+        <style>
+            /* Information Display Section */
+            .info-container {
+                margin: 20px;
+                padding: 20px;
+                background: rgba(42, 47, 54, 0.8);
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .info-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+            }
+
+            .info-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 18px;
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .info-label {
+                font-weight: 500;
+                color: #ffa726;
+                font-size: 1.1em;
+            }
+
+            .info-value {
+                color: rgb(0, 168, 168);
+                font-weight: bold;
+                font-size: 1.1em;
+            }
+
+            .diff-pressure-section {
+                margin-top: 15px;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .pressure-row {
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 8px;
+                padding: 12px 18px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .pressure-row .info-label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .pressure-row .material-symbols-outlined {
+                font-size: 20px;
+                color: #ffa726;
+            }
+        </style>
+
+        <div class="info-container">
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">CW Supply</span>
+                    <span class="info-value" id="cwSupply_info">45.00°F</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">CW Return</span>
+                    <span class="info-value" id="cwReturn_info">48.00°F</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">HW Supply</span>
+                    <span class="info-value" id="hwSupply_info">180.00°F</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">HW Return</span>
+                    <span class="info-value" id="hwReturn_info">160.00°F</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Outdoor Temp</span>
+                    <span class="info-value" id="outdoorTemp">68.00°F</span>
+                </div>
+            </div>
+
+            <div class="diff-pressure-section">
+                <div class="pressure-row">
+                    <span class="info-label">
+                        <span class="material-symbols-outlined">compress</span>
+                        HW Diff Pressure
+                    </span>
+                    <span class="info-value" id="hwDiffPressure">12.00 PSI</span>
+                </div>
+                <div class="pressure-row">
+                    <span class="info-label">
+                        <span class="material-symbols-outlined">compress</span>
+                        CW Diff Pressure
+                    </span>
+                    <span class="info-value" id="cwDiffPressure">15.00 PSI</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Automata Controls. All rights reserved.
+                <a href="https://github.com/AutomataControls" target="_blank"
+                    style="color: #ff6b00; text-decoration: none; margin-left: 10px;">
+                    <i class="fab fa-github"></i>
+                </a>
+            </p>
+        </div>
+
+
+        <!-- Paste Part 6 Here -->
+        <!-- Part 6: State Management Script -->
+        <script>
+            (function (scope) {
+                // Initialize state object with defaults
+                let state = {
+                    dateTime: {
+                        date: "",
+                        time: "",
+                        weather: {
+                            condition: "sunny",
+                            temperature: 68.00,
+                            text: "Sunny"
+                        }
+                    },
+                    cwSupply: 45.00,
+                    cwReturn: 48.00,
+                    hwSupply: 180.00,
+                    hwReturn: 160.00,
+                    cwSetpoint: 45.00,
+                    hwSetpoint: 160.00,
+                    outdoorTemp: 68.00,
+                    hwDiffPressure: 12.00,
+                    cwDiffPressure: 15.00,
+                    showingCwSetpoint: false,
+                    showingHwSetpoint: false,
+                    equipment: {
+                        chiller1: true,
+                        chiller2: false,
+                        boiler1: true,
+                        boiler2: false,
+                        boiler3: false,
+                        boiler4: false,
+                        cwPump1: false,
+                        cwPump2: true,
+                        hwPump1: true,
+                        hwPump2: false
+                    },
+                    status: {
+                        mqtt: true,
+                        hwPump1: true,
+                        hwPump2: false,
+                        cwPump1: false,
+                        cwPump2: true,
+                        chiller1: true,
+                        chiller2: false,
+                        boiler1: true,
+                        boiler2: false,
+                        boiler3: false,
+                        boiler4: false
+                    },
+                    alarms: {
+                        cw: true,
+                        hw: true
+                    }
+                };
+
+                const weatherIcons = {
+                    sunny: "sunny",
+                    cloudy: "cloud",
+                    rain: "rainy",
+                    snow: "weather_snowy",
+                    storm: "thunderstorm",
+                    ice: "ac"
+                };
+
+                function formatNumber(num) {
+                    return Number(num).toFixed(2);
+                }
+
+                function formatDate(date) {
+                    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const d = new Date(date);
+                    return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+                }
+
+                function updateTemperature(circuit, value) {
+                    const isHw = circuit === 'hw';
+                    const setpointKey = `${circuit}Setpoint`;
+                    const showingKey = `showing${circuit.toUpperCase()}Setpoint`;
+                    const ringId = `${circuit}Ring`;
+
+                    // Ensure the current setpoint exists and fallback to a default value
+                    if (state[setpointKey] === undefined) {
+                        state[setpointKey] = isHw ? 160 : 45; // Default values for HW and CW
+                    }
+
+                    // Update the setpoint within bounds
+                    state[setpointKey] = Math.max(
+                        isHw ? 120 : 40,
+                        Math.min(isHw ? 200 : 60, state[setpointKey] + value)
+                    );
+
+                    // Update UI
+                    state[showingKey] = true;
+                    document.getElementById(`${circuit}Setpoint`).textContent = formatNumber(state[setpointKey]);
+                    document.getElementById(ringId).classList.add('showing-setpoint');
+
+                    // Send the updated setpoint
+                    scope.send({
+                        topic: `${circuit.toUpperCase()}Setpoint`,
+                        payload: Number(state[setpointKey])
+                    });
+
+                    // Reset timeout for hiding the setpoint UI
+                    if (state[`${circuit}Timeout`]) {
+                        clearTimeout(state[`${circuit}Timeout`]);
+                    }
+
+                    state[`${circuit}Timeout`] = setTimeout(() => {
+                        state[showingKey] = false;
+                        document.getElementById(ringId).classList.remove('showing-setpoint');
+                        updateDisplay();
+                    }, 3000);
+
+                    // Save the updated state
+                    saveState();
+                }
+
+                function updateWeather() {
+                    const weatherIcon = document.getElementById('weatherIcon');
+                    const weatherText = document.getElementById('weatherText');
+
+                    weatherIcon.textContent = weatherIcons[state.dateTime.weather.condition];
+                    weatherText.textContent = `${state.dateTime.weather.text} ${formatNumber(state.dateTime.weather.temperature)}°F`;
+                }
+
+                function updateDisplay() {
+                    document.getElementById('date').textContent = state.dateTime.date || formatDate(new Date());
+
+                    let timeDisplay = state.dateTime.time;
+                    if (!timeDisplay) {
+                        timeDisplay = new Date().toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                    }
+                    document.getElementById('time').textContent = timeDisplay;
+
+                    updateWeather();
+
+                    document.getElementById('cwSupply').textContent = formatNumber(state.cwSupply);
+                    document.getElementById('hwSupply').textContent = formatNumber(state.hwSupply);
+
+                    document.getElementById('cwSupply_info').textContent = `${formatNumber(state.cwSupply)}°F`;
+                    document.getElementById('cwReturn_info').textContent = `${formatNumber(state.cwReturn)}°F`;
+                    document.getElementById('hwSupply_info').textContent = `${formatNumber(state.hwSupply)}°F`;
+                    document.getElementById('hwReturn_info').textContent = `${formatNumber(state.hwReturn)}°F`;
+                    document.getElementById('outdoorTemp').textContent = `${formatNumber(state.outdoorTemp)}°F`;
+
+                    document.getElementById('hwDiffPressure').textContent = `${formatNumber(state.hwDiffPressure)} PSI`;
+                    document.getElementById('cwDiffPressure').textContent = `${formatNumber(state.cwDiffPressure)} PSI`;
+
+                    Object.keys(state.status).forEach(key => {
+                        const element = document.getElementById(`${key}Status`);
+                        if (element) {
+                            element.dataset.active = state.status[key];
+                        }
+                    });
+
+                    Object.keys(state.equipment).forEach(key => {
+                        const element = document.getElementById(`${key}Enable`);
+                        if (element) {
+                            element.dataset.active = state.equipment[key];
+                        }
+                    });
+
+                    const cwAlarmElement = document.getElementById('cwAlarm');
+                    const hwAlarmElement = document.getElementById('hwAlarm');
+
+                    if (cwAlarmElement && state.alarms.cw !== undefined) {
+                        cwAlarmElement.dataset.status = state.alarms.cw;
+                    }
+                    if (hwAlarmElement && state.alarms.hw !== undefined) {
+                        hwAlarmElement.dataset.status = state.alarms.hw;
+                    }
+                }
+
+                function toggleEquipment(equipment) {
+                    state.equipment[equipment] = !state.equipment[equipment];
+                    const button = document.getElementById(`${equipment}Enable`);
+                    button.dataset.active = state.equipment[equipment];
+
+                    scope.send({
+                        topic: `${equipment}Enable`,
+                        payload: state.equipment[equipment]
+                    });
+
+                    saveState();
+                }
+
+                function saveState() {
+                    try {
+                        localStorage.setItem('equipmentState', JSON.stringify(state));
+                    } catch (e) {
+                        console.error("Failed to save state:", e);
+                    }
+                }
+
+                function loadState() {
+                    try {
+                        const savedState = localStorage.getItem('equipmentState');
+                        if (savedState) {
+                            state = { ...state, ...JSON.parse(savedState) };
+                        }
+                    } catch (e) {
+                        console.error("Failed to load state:", e);
+                    }
+                }
+
+                document.getElementById('cwRing').addEventListener('click', (e) => {
+                    const rect = e.target.getBoundingClientRect();
+                    const isIncrease = e.clientY < rect.top + rect.height / 2; updateTemperature('cw', isIncrease ? 1 : -1);
+                });
+                document.getElementById('hwRing').addEventListener('click', (e) => {
+                    const rect = e.target.getBoundingClientRect();
+                    const isIncrease = e.clientY < rect.top + rect.height / 2; updateTemperature('hw', isIncrease ? 1 : -1);
+                });
+                document.querySelectorAll('.equipment-button').forEach(button => {
+                    const equipment = button.id.replace('Enable', '');
+                    button.addEventListener('click', () => toggleEquipment(equipment));
+                });
+
+                if (scope) {
+                    scope.$watch('msg', function (msg) {
+                        if (!msg || !msg.payload) return;
+
+                        let stateChanged = false;
+
+                        if (msg.topic === 'time') {
+                            state.dateTime.time = msg.payload;
+                            stateChanged = true;
+                        } else if (msg.topic === 'date') {
+                            state.dateTime.date = msg.payload;
+                            stateChanged = true;
+                        } else if (msg.topic === 'weather') {
+                            state.dateTime.weather = msg.payload;
+                            stateChanged = true;
+                        } else {
+                            Object.keys(msg.payload).forEach(key => {
+                                if (key in state) {
+                                    state[key] = typeof msg.payload[key] === 'number' ? Number(msg.payload[key]) : msg.payload[key];
+                                    stateChanged = true;
+                                } else if (key.endsWith('Status') && key.slice(0, -6) in state.status) {
+                                    state.status[key.slice(0, -6)] = Boolean(msg.payload[key]);
+                                    stateChanged = true;
+                                } else if (key === 'alarms') {
+                                    if (msg.payload.alarms.cw !== undefined) {
+                                        state.alarms.cw = Boolean(msg.payload.alarms.cw);
+                                        stateChanged = true;
+                                    }
+                                    if (msg.payload.alarms.hw !== undefined) {
+                                        state.alarms.hw = Boolean(msg.payload.alarms.hw);
+                                        stateChanged = true;
+                                    }
+                                }
+                            });
+                        }
+
+                        if (stateChanged) {
+                            updateDisplay();
+                            saveState();
+                        }
+                    });
+                }
+
+                loadState();
+                updateDisplay();
+                setInterval(saveState, 5000);
+
+                document.addEventListener('visibilitychange', function () {
+                    if (!document.hidden) {
+                        loadState();
+                    }
+                });
+
+            })(scope);
+        </script>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+{
+  "name": "@automatacontrols/building-systems-controller",
+  "version": "1.0.0",
+  "description": "Professional-grade building systems control interface for Node-RED Dashboard 2.0, featuring comprehensive HVAC equipment monitoring and control capabilities",
+  "main": "nodes/controller.js",
+  "scripts": {
+    "test": "mocha \"test/**/*_spec.js\"",
+    "lint": "eslint nodes/*.js",
+    "pretest": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AutomataControls/AutomataBuildingSystemsController.git"
+  },
+  "keywords": [
+    "node-red",
+    "dashboard",
+    "building-automation",
+    "hvac",
+    "chiller",
+    "boiler",
+    "pump-control",
+    "equipment-monitoring",
+    "controls",
+    "ui",
+    "widget",
+    "automata"
+  ],
+  "node-red": {
+    "version": ">=3.0.0",
+    "nodes": {
+      "building-controller": "nodes/controller.js"
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": {
+    "name": "AutomataControls",
+    "url": "https://github.com/AutomataControls"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AutomataControls/AutomataBuildingSystemsController/issues"
+  },
+  "homepage": "https://github.com/AutomataControls/AutomataBuildingSystemsController#readme",
+  "dependencies": {
+    "@node-red/dashboard": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "node-red": "^3.1.0",
+    "node-red-node-test-helper": "^0.3.3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  }
+}

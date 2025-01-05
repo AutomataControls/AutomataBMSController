@@ -1,0 +1,46 @@
+<script type="text/html" data-template-name="AutomataBMSController">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Automata BMS Controller">
+    </div>
+    <div class="form-row">
+        <label for="node-input-group"><i class="fa fa-object-group"></i> Group</label>
+        <input type="text" id="node-input-group">
+    </div>
+    <div class="form-row">
+        <label for="node-input-width"><i class="fa fa-arrows-h"></i> Size</label>
+        <input type="number" id="node-input-width" min="1" max="24" value="24">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('AutomataBMSController', {
+        category: 'dashboard',
+        color: '#E9967A',
+        defaults: {
+            name: { value: "" },
+            group: { type: "ui_group", required: true },
+            width: { value: 24 }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "controller.png",
+        label: function () {
+            return this.name || "Automata BMS Controller";
+        },
+        paletteLabel: "Automata BMS Controller"
+    });
+</script>
+
+<script type="text/html" data-help-name="AutomataBMSController">
+    <p>A professional-grade Building Management System (BMS) control interface.</p>
+    
+    <h3>Details</h3>
+    <p>The Automata BMS Controller provides comprehensive building management capabilities with real-time monitoring and control of HVAC systems, including:</p>
+    <ul>
+        <li>Temperature monitoring and setpoint control</li>
+        <li>Equipment status visualization and control</li>
+        <li>Integrated alarm management</li>
+        <li>Differential pressure monitoring</li>
+    </ul>
+</script>
