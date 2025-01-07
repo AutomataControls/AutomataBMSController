@@ -1,6 +1,6 @@
 {
   "name": "@automatacontrols/building-systems-controller",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Professional-grade building systems control interface for Node-RED Dashboard 2.0, featuring comprehensive HVAC equipment monitoring and control capabilities",
   "main": "nodes/controller.js",
   "scripts": {
